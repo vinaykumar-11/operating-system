@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Process 
+{
+    int id, burst, wait, turn;
+};
+void swap(struct Process* a, struct Process* b) 
+{
+    struct Process t = *a; *a = *b; *b = t;
+}
+int findMin(struct Process p[], int n, int start)
+{
+    int min = start;
+    for (int i = start + 1; i < n; i++)
+        if (p[i].burst < p[min].burst) min = i;
+    return min;
+}
+void sjf(struct Process p[], int n)
+{
+    for (int i = 0; i < n - 1; i++)
+        swap(&p[i], &p[findMin(p, n, i)]);  
+    int t = 0;
+    p[0].wait = 0; p[0].turn = p[0].burst; t = p[0].burst;
+    for (int i = 1; i < n; i++) 
+{
+        p[i].wait = t;
+        p[i].turn = t + p[i].burst;
+        t += p[i].burst;
+    }
+    float avg_w = 0, avg_t = 0;
+    for (int i = 0; i < n; i++)
+{
+        avg_w += p[i].wait;
+        avg_t += p[i].turn;
+    }    
+    printf("P\tB\tW\tT\n");
+    for (int i = 0; i < n; i++)
+        printf("P%d\t%d\t%d\t%d\n", p[i].id, p[i].burst, p[i].wait, p[i].turn);
+    printf("\nAvg Wait: %.2f, Avg Turn: %.2f\n", avg_w/n, avg_t/n);
+}
+int main() 
+{
+    int n;
+    scanf("%d", &n);
+    struct Process p[n];
+    for (int i = 0; i < n; i++)
+{
+        p[i].id = i + 1;
+        scanf("%d", &p[i].burst);
+    }
+    sjf(p, n);
+    return 0;
+}
