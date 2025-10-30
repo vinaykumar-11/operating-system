@@ -1,0 +1,66 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct Process 
+{
+    int pid;           
+    int burst_time;    
+    int waiting_time;  
+    int turnaround_time;
+} Process;
+void input_processes(Process proc[], int n) {
+    for (int i = 0; i < n; i++)
+{
+        proc[i].pid = i + 1;
+        proc[i].waiting_time = 0; 
+        proc[i].turnaround_time = 0; 
+        printf("Enter burst time for process %d: ", i + 1);
+        scanf("%d", &proc[i].burst_time);
+        while (proc[i].burst_time <= 0) {
+            printf("Burst time must be positive. Re-enter burst time for process %d: ", i + 1);
+            scanf("%d", &proc[i].burst_time);
+        }
+    }
+}
+void calculate_times(Process proc[], int n) {
+    int total_waiting_time = 0;
+    int total_turnaround_time = 0;
+    proc[0].waiting_time = 0; 
+    for (int i = 1; i < n; i++) 
+{
+        proc[i].waiting_time = proc[i-1].waiting_time + proc[i-1].burst_time;
+    }
+    for (int i = 0; i < n; i++) 
+{
+        proc[i].turnaround_time = proc[i].burst_time + proc[i].waiting_time;
+    }
+    printf("\nPID\tBurst Time\tWaiting Time\tTurnaround Time\n");
+    printf("-------------------------------------------------\n");
+    for (int i = 0; i < n; i++) 
+{
+        printf("%-8d%-16d%-16d%-16d\n", proc[i].pid, proc[i].burst_time, 
+               proc[i].waiting_time, proc[i].turnaround_time);
+        total_waiting_time += proc[i].waiting_time;
+        total_turnaround_time += proc[i].turnaround_time;
+    }
+    float avg_waiting_time = (float)total_waiting_time / n;
+    float avg_turnaround_time = (float)total_turnaround_time / n; 
+    printf("-------------------------------------------------\n");
+    printf("Average Waiting Time: %.2f\n", avg_waiting_time);
+    printf("Average Turnaround Time: %.2f\n", avg_turnaround_time);
+}
+int main()
+{
+    int n;
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+    while (n <= 0)
+{
+        printf("Number of processes must be positive. Re-enter: ");
+        scanf("%d", &n);
+    }    
+    Process proc[n];
+    input_processes(proc, n);
+    calculate_times(proc, n);
+    return 0;
+}
