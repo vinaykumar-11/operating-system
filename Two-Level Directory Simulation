@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_USERS 10
+#define MAX_FILES 10
+#define MAX_NAME 20
+
+typedef struct {
+    char files[MAX_FILES][MAX_NAME];
+    int fileCount;
+} Directory;
+
+int main() {
+    char users[MAX_USERS][MAX_NAME];
+    Directory userDir[MAX_USERS];
+    int userCount = 0;
+    int choice;
+    char username[MAX_NAME], filename[MAX_NAME];
+
+    do {
+        printf("\n1. Create User\n2. Create File\n3. Delete File\n4. Display User Files\n5. Exit\nEnter choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                printf("Enter username: ");
+                scanf("%s", username);
+                strcpy(users[userCount], username);
+                userDir[userCount].fileCount = 0;
+                userCount++;
+                break;
+            case 2:
+                printf("Enter username: ");
+                scanf("%s", username);
+                int userIndex = -1;
+                for(int i = 0; i < userCount; i++)
+                    if(strcmp(users[i], username) == 0)
+                        userIndex = i;
+                if(userIndex != -1) {
+                    printf("Enter file name: ");
+                    scanf("%s", filename);
+                    strcpy(userDir[userIndex].files[userDir[userIndex].fileCount++], filename);
+                } else {
+                    printf("User not found.\n");
+                }
+                break;
+            case 3:
+                printf("Enter username: ");
+                scanf("%s", username);
+                userIndex = -1;
+                for(int i = 0; i < userCount; i++)
+                    if(strcmp(users[i], username) == 0)
+                        userIndex = i;
+                if(userIndex != -1) {
+                    printf("Enter file name to delete: ");
+                    scanf("%s", filename);
+                    for(int j = 0; j < userDir[userIndex].fileCount; j++) {
+                        if(strcmp(userDir[userIndex].files[j], filename) == 0) {
+                            for(int k = j; k < userDir[userIndex].fileCount-1; k++)
+                                strcpy(userDir[userIndex].files[k], userDir[userIndex].files[k+1]);
+                            userDir[userIndex].fileCount--;
+                            break;
+                        }
+                    }
+                } else {
+                    printf("User not found.\n");
+                }
+                break;
+            case 4:
+                printf("Enter username: ");
+                scanf("%s", username);
+                userIndex = -1;
+                for(int i = 0; i < userCount; i++)
+                    if(strcmp(users[i], username) == 0)
+                        userIndex = i;
+                if(userIndex != -1) {
+                    printf("Files of %s:\n", username);
+                    for(int j = 0; j < userDir[userIndex].fileCount; j++)
+                        printf("%s\n", userDir[userIndex].files[j]);
+                } else {
+                    printf("User not found.\n");
+                }
+                break;
+        }
+    } while(choice != 5);
+
+    return 0;
+}
