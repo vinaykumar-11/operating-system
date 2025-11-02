@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_FILES 100
+#define MAX_FILENAME 20
+
+int main() {
+    char files[MAX_FILES][MAX_FILENAME];
+    int fileCount = 0;
+    int choice;
+    char filename[MAX_FILENAME];
+
+    do {
+        printf("\n1. Create File\n2. Delete File\n3. Display Files\n4. Exit\nEnter choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                printf("Enter file name: ");
+                scanf("%s", filename);
+                strcpy(files[fileCount++], filename);
+                break;
+            case 2:
+                printf("Enter file name to delete: ");
+                scanf("%s", filename);
+                for(int i = 0; i < fileCount; i++) {
+                    if(strcmp(files[i], filename) == 0) {
+                        for(int j = i; j < fileCount - 1; j++)
+                            strcpy(files[j], files[j+1]);
+                        fileCount--;
+                        break;
+                    }
+                }
+                break;
+            case 3:
+                printf("Files:\n");
+                for(int i = 0; i < fileCount; i++)
+                    printf("%s\n", files[i]);
+                break;
+        }
+    } while(choice != 4);
+
+    return 0;
+}
