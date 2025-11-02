@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n, head, diskSize;
+    printf("Enter number of requests: ");
+    scanf("%d", &n);
+
+    int requests[n];
+    printf("Enter request sequence: ");
+    for(int i = 0; i < n; i++)
+        scanf("%d", &requests[i]);
+
+    printf("Enter initial head position: ");
+    scanf("%d", &head);
+
+    printf("Enter disk size: ");
+    scanf("%d", &diskSize);
+
+    int seek = 0;
+    int temp;
+    
+    // Simple SCAN in ascending direction
+    for(int i = head; i < diskSize; i++) {
+        for(int j = 0; j < n; j++) {
+            if(requests[j] == i) {
+                seek += abs(i - head);
+                head = i;
+                printf("Serviced request: %d\n", i);
+            }
+        }
+    }
+    // then reverse direction if needed (not fully optimized here)
+    printf("Total seek distance: %d\n", seek);
+    return 0;
+}
